@@ -2,6 +2,8 @@ import discord
 from discord.utils import get
 from dotenv import load_dotenv
 import os
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
+import pytz
 from anju import *
 from help import *
 from randomize import *
@@ -22,6 +24,16 @@ queue_text = 'Select the game you want to queue for: \n\n'
 games = ['Valorant', 'League']
 game_emojis = {}
 queue = {}
+
+async def clear_queues(message):
+    global queue
+    queue = {}
+    for game in games:
+        queue[game] = []
+    await message.edit(content=queue_text)
+    await message.clear_reactions()
+    for game, emoji in game_emojis.items():
+        await message.add_reaction(emoji)
 
 @client.event
 async def on_ready():
@@ -54,6 +66,11 @@ async def on_ready():
     # react to bot message with emojis
     for game, emoji in game_emojis.items():
         await msg.add_reaction(emoji)
+
+    pacific = pytz.timezone("US/Pacific")
+    scheduler = AsyncIOScheduler()
+    scheduler.add_job(clear_queues, 'interval', args = [msg], days=1, start_date='2022-01-01 7:00:00', timezone=pacific)
+    scheduler.start()
 
 @client.event
 async def on_message(message):
