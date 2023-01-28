@@ -8,10 +8,11 @@
 #### <i>Fanboy/Son adoption</i>
 * `!fan` to become Anju Fanboy
 * `!son` to become Anju Son
-#### <i>Maps, Agents, and Guns Random Generation</i>
+#### <i>Maps, Agents, Guns, and Strat Random Generation</i>
 * `!map` to randomly generate a map choice.
 * `!agent [number]` to generate the specified number of agent choices.
 * `!gun` to randomly generate a gun choice. 
+* `!strat` to randomly generate a strat/play style. 
 
 ## Set up
 * Install `discord.py` library: <b>`pip install -U discord.py`</b>
