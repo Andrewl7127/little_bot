@@ -26,12 +26,13 @@ queue = {}
 @client.event
 async def on_ready():
     print(f'We have logged in as {client.user}')
-    
+
     channel = get(client.get_all_channels(), guild__name="Koffee", name='queues')
     global channel_id
     channel_id = channel.id
     await channel.purge(limit=None, bulk=True)
-
+    await public_help(channel)
+    
     # make individual queues and identify emojis for each game
     global queue_text
     global queue
