@@ -32,7 +32,7 @@ async def on_ready():
     channel_id = channel.id
     await channel.purge(limit=None, bulk=True)
     await public_help(channel)
-    
+
     # make individual queues and identify emojis for each game
     global queue_text
     global queue
@@ -82,6 +82,10 @@ async def on_message(message):
 
     if message.content == '!gun':
         await randomGun(message)
+        return
+
+    if message.content == '!strat':
+        await randomStrat(message)
         return
 
 @client.event
