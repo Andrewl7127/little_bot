@@ -4,7 +4,8 @@
 #### <i>Queue</i>
 * Bot displays a message with specified react icons.
 * Upon reaction to the bot message, player gets added to the corresponding queue. 
-* Bot notifies existing players in the queue of any addition or removal in real time. 
+* Bot notifies existing players in the queue of any addition or removal in real time.
+* Queues automatically reset daily at 7 am pst.
 #### <i>Fanboy/Son adoption</i>
 * `!fan` to become Anju Fanboy
 * `!son` to become Anju Son
