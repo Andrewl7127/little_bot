@@ -92,4 +92,4 @@ async def on_raw_reaction_remove(payload):
             content = queue_text + ', '.join([str(i) for i in queue])
             await message.edit(content=content)
 
-client.run('MTA2ODQ0NTc0MzAyODkwMzk1Nw.GtW9MT.yh6xd0xxnDv3b6OiLfHXIQgSuKjYewObcZVsXY')
+client.run('MTA2ODQ0NTc0MzAyODkwMzk1Nw.Gs8pmX.QSZwpTj-Nvth9iXlWntG9ONuar7vp5K-ahwyYg')
