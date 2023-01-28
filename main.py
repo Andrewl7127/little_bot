@@ -79,6 +79,10 @@ async def on_message(message):
         await randomAgent(message)
         return
 
+    if message.content == '!gun':
+        await randomGun(message)
+        return
+
 @client.event
 async def on_reaction_add(reaction, user):
     if user == client.user:
