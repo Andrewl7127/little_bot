@@ -7,6 +7,7 @@ msg = '''
 !fan - become Anju Fanboy
 
 !gun - random Valorant gun
+!pistol - random Valorant pistol
 !map - random Valorant map
 !agent {X} - {X} random Valorant agents, default = 1
 !strat - random Valorant strategy
