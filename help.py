@@ -18,8 +18,7 @@ React with game icon to be added to game queue
 Unreact to be removed from game queue
 Queues reset daily at 7 am pst
 
-*Developed by Anju and Flurry*
-    '''
+*Developed by Anju and Flurry*\n'''
 
 async def help(message):
     await message.author.send(msg)
