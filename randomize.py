@@ -1,4 +1,9 @@
 import random
+import requests
+
+async def randomStrat(message):
+    strat = requests.get('https://api.diah.info/valorant/roulette.php').text
+    await message.channel.send(f'{message.author.mention} ' + strat)
 
 async def randomAgent(message):
     number = message.content.split(' ')
