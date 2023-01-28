@@ -1,20 +1,25 @@
 import discord
 from discord.utils import get
 from anju import *
-from queue import *
+# from queue import *
+from dotenv import load_dotenv
+import os
 
 intents = discord.Intents.default()
 intents.message_content = True
 intents.members = True
 
+load_dotenv()
+TOKEN = os.getenv('DISCORD_TOKEN')
+
 client = discord.Client(intents=intents)
 
 queue_id = None
 channel_id = None
-queue_text = 'This is a test queue message\n\nCurrent members in queue: '
-queue = []
-
-valorant_emoji = None
+queue_text = 'Select the game you want to queue for: \n'
+games = ['Valorant', 'League']
+game_emojis = {}
+queue = {}
 
 @client.event
 async def on_ready():
@@ -23,14 +28,26 @@ async def on_ready():
     global channel_id
     channel_id = channel.id
     await channel.purge(limit=None, bulk=True)
+
+   # make individual queues and identify emojis for each game
+    global queue_text
+    for game in games:
+        queue[game] = []
+        queue_text += ' * ' + str(game) + ' ( '
+        for emoji in client.emojis:
+            if emoji.name == game.lower():
+                game_emojis[game] = str(emoji)
+                queue_text += str(emoji) + ' )\n'
+                break
+
+    # display bot message with emojis
     msg = await channel.send(queue_text)
     global queue_id 
     queue_id = msg.id
 
-    valorant = [emoji for emoji in client.emojis if emoji.name == 'valorant'][0]
-    global valorant_emoji
-    valorant_emoji = str(valorant)
-    await msg.add_reaction(valorant_emoji)
+    # react to bot message with emojis
+    for emoji in game_emojis:
+        await msg.add_reaction(emoji)
 
 
 @client.event
@@ -92,4 +109,4 @@ async def on_raw_reaction_remove(payload):
             content = queue_text + ', '.join([str(i) for i in queue])
             await message.edit(content=content)
 
-client.run('MTA2ODQ0NTc0MzAyODkwMzk1Nw.Gs8pmX.QSZwpTj-Nvth9iXlWntG9ONuar7vp5K-ahwyYg')
+client.run(TOKEN)
