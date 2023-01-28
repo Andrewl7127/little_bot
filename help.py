@@ -5,6 +5,10 @@ async def help(message):
 !adopt - become Anju Son
 !fan - become Anju Fanboy
 
+!gun - random Valorant gun
+!map - random Valorant map
+!agent X - X random Valorant agents, default = 1
+
 **__Reactions__**
 
 React with game icon to be added to game queue.
