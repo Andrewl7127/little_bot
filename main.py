@@ -16,15 +16,10 @@ client = discord.Client(intents=intents)
 
 queue_id = None
 channel_id = None
-queue_text = '''
-    Select the game you want to queue for: 
-    * Valorant ()
-    * League
-    
-    Current members in queue: '''
-queue = []
-
-valorant_emoji = None
+queue_text = 'Select the game you want to queue for: \n'
+games = ['Valorant', 'League']
+game_emojis = {}
+queue = {}
 
 @client.event
 async def on_ready():
@@ -34,10 +29,16 @@ async def on_ready():
     channel_id = channel.id
     await channel.purge(limit=None, bulk=True)
 
-    # identify emojis
-    valorant = [emoji for emoji in client.emojis if emoji.name == 'valorant'][0]
-    global valorant_emoji
-    valorant_emoji = str(valorant)
+   # make individual queues and identify emojis for each game
+    global queue_text
+    for game in games:
+        queue[game] = []
+        queue_text += ' * ' + str(game) + ' ( '
+        for emoji in client.emojis:
+            if emoji.name == game.lower():
+                game_emojis[game] = str(emoji)
+                queue_text += str(emoji) + ' )\n'
+                break
 
     # display bot message with emojis
     msg = await channel.send(queue_text)
@@ -45,7 +46,8 @@ async def on_ready():
     queue_id = msg.id
 
     # react to bot message with emojis
-    await msg.add_reaction(valorant_emoji)
+    for emoji in game_emojis:
+        await msg.add_reaction(emoji)
 
 
 @client.event
