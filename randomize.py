@@ -1,8 +1,4 @@
-async def randomMap(message):
-    return
-
-async def randomAgent(message):
-    return
+import random
 
 async def randomAgent(message):
     number = message.content.split(' ')
@@ -40,3 +36,41 @@ async def randomAgent(message):
         for n in range(number):
             msg += 'Player ' + str(n+1) + ': ' + agent[n] + '\n'
         await message.channel.send(f'{message.author.mention} \n' + msg)
+
+async def randomMap(message):
+    maps = [
+        'Ascent',
+        'Bind',
+        'Breeze',
+        'Fracture',
+        'Haven',
+        'Icebox',
+        'Lotus',
+        'Pearl',
+        'Split'
+    ]
+
+    await message.channel.send(f'{message.author.mention} ' + maps[random.randint(0, len(maps) - 1)])
+
+async def randomGun(message):
+    guns = [
+        'Classic',
+        'Shorty',
+        'Frenzy',
+        'Ghost',
+        'Sheriff',
+        'Stinger',
+        'Spectre',
+        'Bucky',
+        'Judge',
+        'Bulldog',
+        'Guardian',
+        'Phantom',
+        'Vandal',
+        'Marshall',
+        'Operator',
+        'Ares',
+        'Odin'
+    ]
+
+    await message.channel.send(f'{message.author.mention} ' + guns[random.randint(0, len(guns) - 1)])
