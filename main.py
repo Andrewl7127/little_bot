@@ -84,6 +84,10 @@ async def on_message(message):
         await randomGun(message)
         return
 
+    if message.content == '!pistol':
+        await randomPistol(message)
+        return
+
     if message.content == '!strat':
         await randomStrat(message)
         return
