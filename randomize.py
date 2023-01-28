@@ -79,3 +79,15 @@ async def randomGun(message):
     ]
 
     await message.channel.send(f'{message.author.mention} ' + guns[random.randint(0, len(guns) - 1)])
+
+
+async def randomPistol(message):
+    guns = [
+        'Classic',
+        'Shorty',
+        'Frenzy',
+        'Ghost',
+        'Sheriff'
+    ]
+
+    await message.channel.send(f'{message.author.mention} ' + guns[random.randint(0, len(guns) - 1)])
