@@ -1,5 +1,4 @@
 async def adopt(message):
-
     names = []
     async for member in message.guild.fetch_members():
         if member.nick:
