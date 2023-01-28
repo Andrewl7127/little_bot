@@ -13,12 +13,12 @@ async def adopt(message):
         sons = [int(''.join([j for j in i if j.isnumeric()])) for i in sons]
         sons = [i for i in sons if type(i) == int]
         msg = 'Congratulations, you have been assigned as #' + str(max(sons) + 1) + ' Son!'
-        await message.channel.send(msg)
+        await message.channel.send(f'{message.author.mention} ' + msg)
         next = "Anju's #" + str(max(sons) + 1) + ' Son'
         await message.author.edit(nick=next)
     else:
         msg = 'Congratulations, you have been assigned as #1 Son!'
-        await message.channel.send(msg)
+        await message.channel.send(f'{message.author.mention} ' + msg)
         next = "Anju's #1 Son"
         await message.author.edit(nick=next)
 
@@ -36,12 +36,12 @@ async def fan(message):
     if len(fanboys) > 0:
         fanboys = [int(''.join([j for j in i if j.isnumeric()])) for i in fanboys]
         fanboys = [i for i in fanboys if type(i) == int]
-        msg = 'Congratulations, you have been assigned as #' + str(max(fanboys) + 1) + ' Fanboy!'
-        await message.channel.send(msg)
+        msg = ' Congratulations, you have been assigned as #' + str(max(fanboys) + 1) + ' Fanboy!'
+        await message.channel.send(f'{message.author.mention} ' + msg)
         next = "Anju's #" + str(max(fanboys) + 1) + ' Fanboy'
         await message.author.edit(nick=next)
     else:
-        msg = 'Congratulations, you have been assigned as #1 Fanboy!'
-        await message.channel.send(msg)
+        msg = ' Congratulations, you have been assigned as #1 Fanboy!'
+        await message.channel.send(f'{message.author.mention} ' + msg)
         next = "Anju's #1 Fanboy"
         await message.author.edit(nick=next)
