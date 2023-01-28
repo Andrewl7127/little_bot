@@ -3,19 +3,22 @@ msg = '''
 
 !help - bot instructions
 
-!adopt - become Anju Son
-!fan - become Anju Fanboy
+!adopt - become Anju son
+!fan - become Anju fanboy
 
 !gun - random Valorant gun
 !pistol - random Valorant pistol
 !map - random Valorant map
-!agent {X} - {X} random Valorant agents, default = 1
+!agent {X} - {X} random Valorant agents, default is 1
 !strat - random Valorant strategy
 
 **__Reactions__**
 
-React with game icon to be added to game queue.
+React with game icon to be added to game queue
 Unreact to be removed from game queue
+Queues reset daily at 7 am pst
+
+*Developed by Anju and Flurry*
     '''
 
 async def help(message):
