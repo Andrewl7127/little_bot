@@ -11,7 +11,8 @@
 #### <i>Maps, Agents, Guns, and Strat Random Generation</i>
 * `!map` to randomly generate a map choice.
 * `!agent [number]` to generate the specified number of agent choices.
-* `!gun` to randomly generate a gun choice. 
+* `!gun` to randomly generate a gun choice from all the gun options. 
+* `!pistol` to randomly generate a gun choice from only the pistol options.
 * `!strat` to randomly generate a strat/play style. 
 
 ## Set up
