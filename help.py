@@ -9,6 +9,7 @@ msg = '''
 !gun - random Valorant gun
 !map - random Valorant map
 !agent {X} - {X} random Valorant agents, default = 1
+!strat - random Valorant strategy
 
 **__Reactions__**
 
