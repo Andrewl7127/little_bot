@@ -1,4 +1,6 @@
-# Queue_bot For Games
+# Little Bot
+
+<img src="https://user-images.githubusercontent.com/33340487/215303416-7116313b-1950-4922-9244-d6bda0aa4f2b.jpg" with="250" height="250">
 
 ## Features 
 #### <i>Queue</i>
