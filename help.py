@@ -16,13 +16,13 @@ msg = '''**__Commands__**
 React with game icon to be added to game queue
 Unreact to be removed from game queue
 
-Queues and #bot-commands reset daily at 7 am pst
-*Developed by Anju and Flurry*\n'''
+Queues and #bot-commands reset daily at 7 am pst'''
 
 async def help(message):
+    await message.channel.send(f'{message.author.mention} ' + 'Sending help to your inbox!')
     await message.author.send(msg)
 
 async def public_help(channel):
     pre = '=========================================================\n'
-    post = '=========================================================\n\n\n.'
+    post = '\n*Developed by Anju and Flurry*\n=========================================================\n\n\n.'
     await channel.send(pre + msg + post)
