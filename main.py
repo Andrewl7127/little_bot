@@ -17,7 +17,7 @@ TOKEN = os.getenv('DISCORD_TOKEN')
 
 client = discord.Client(intents=intents)
 
-server_name = 'Bot Lobby'
+server_name = 'Bot Lobby Test'
 games = ['Valorant', 'League']
 game_emojis = {}
 queue = {}
@@ -25,7 +25,7 @@ queue_text = 'Select the game you want to queue for: \n\n'
 
 queue_id = None
 queue_channel_id = None
-general_channel_id = None
+queue_notifications_channel_id = None
 bot_channel_id = None
 guild = None
 
@@ -39,8 +39,10 @@ async def clear_queues(message):
     for game, emoji in game_emojis.items():
         await message.add_reaction(emoji)
 
-async def clear_bot_commands():
+async def clear_channels():
     channel = client.get_channel(bot_channel_id)
+    await channel.purge(limit=None, bulk=True)
+    channel = client.get_channel(queue_notifications_channel_id)
     await channel.purge(limit=None, bulk=True)
 
 @client.event
@@ -50,9 +52,9 @@ async def on_ready():
     #variables
     global guild
     guild = get(client.guilds, name=server_name)
-    channel = get(client.get_all_channels(), guild__name=server_name, name='general')
-    global general_channel_id
-    general_channel_id = channel.id
+    channel = get(client.get_all_channels(), guild__name=server_name, name='queue-notifications')
+    global queue_notifications_channel_id
+    queue_notifications_channel_id = channel.id
     channel = get(client.get_all_channels(), guild__name=server_name, name='bot-commands')
     global bot_channel_id
     bot_channel_id = channel.id
@@ -89,7 +91,7 @@ async def on_ready():
     pacific = pytz.timezone("US/Pacific")
     scheduler = AsyncIOScheduler()
     scheduler.add_job(clear_queues, 'interval', args = [msg], days=1, start_date='2022-01-01 7:00:00', timezone=pacific)
-    scheduler.add_job(clear_bot_commands, 'interval', days=1, start_date='2022-01-01 7:00:00', timezone=pacific)
+    scheduler.add_job(clear_channels, 'interval', days=1, start_date='2022-01-01 7:00:00', timezone=pacific)
     scheduler.start()
 
 @client.event
@@ -139,23 +141,19 @@ async def on_reaction_add(reaction, user):
             if str(reaction.emoji) == emoji:
                 global queue
 
-                if len(queue[game]) == 0:
-                    msg = str(user) + f' has started a {game} queue!'
-                    channel = client.get_channel(general_channel_id)
+                queue[game].append(user)
+
+                if len(queue[game]) == 1:
+                    msg = str(user) + f' has started the {game} queue!'
+                    channel = client.get_channel(queue_notifications_channel_id)
                     role_name = 'LFG-' + game.title()
                     role = get(guild.roles, name=role_name)
                     await channel.send(f'{role.mention} ' + msg)
 
-                for i in queue[game]:
+                else:
+                    channel = client.get_channel(queue_notifications_channel_id)
                     msg = str(user) + f' has joined the {game} queue!'
-                    await i.send(msg)
-
-                queue[game].append(user)
-                await user.send(f'You have been added to the {game} queue!')
-
-                msg = f'Current members in {game} queue: '
-                msg += ', '.join([str(i) for i in queue[game]])
-                await user.send(msg)
+                    await channel.send(msg)
 
                 channel = client.get_channel(queue_channel_id)
                 message = await channel.fetch_message(queue_id)
@@ -179,10 +177,9 @@ async def on_raw_reaction_remove(payload):
                 global queue
                 if user in queue[game]:
                     queue[game].remove(user)
-                    await user.send(f'You have been removed from the {game} queue!')
-                    for i in queue[game]:
-                        msg = str(user) + f' has left the {game} queue!'
-                        await i.send(msg)
+                    channel = client.get_channel(queue_notifications_channel_id)
+                    msg = str(user) + f' has left the {game} queue.'
+                    await channel.send(msg)
                 
                 channel = client.get_channel(queue_channel_id)
                 message = await channel.fetch_message(queue_id)
