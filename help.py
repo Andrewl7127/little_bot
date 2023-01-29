@@ -19,9 +19,9 @@ Unreact to be removed from the game queue
 Queues, #queue-notifications, and #bot-commands reset daily at 7 am pst'''
 
 async def help(message):
-    await message.channel.send(f'{message.author.mention} ' + 'Sending help to your inbox!')
     try:
         await message.author.send(msg)
+        await message.channel.send(f'{message.author.mention} ' + 'Sent help to your inbox!')
     except:
         await message.channel.send(f'{message.author.mention} ' + 'Sorry, but I was unable to reach your inbox.')
 
