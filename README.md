@@ -10,6 +10,7 @@
 * `!fan` to become Anju Fanboy
 * `!son` to become Anju Son
 #### <i>Maps, Agents, Guns, and Strat Random Generation</i>
+* Allow players to type bot commands in the `#bot-commands` channel, which automatically resets daily at 7 am pst.
 * `!map` to randomly generate a map choice.
 * `!agent [number]` to generate the specified number of agent choices.
 * `!gun` to randomly generate a gun choice from all the gun options. 
