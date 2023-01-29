@@ -17,7 +17,7 @@ TOKEN = os.getenv('DISCORD_TOKEN')
 
 client = discord.Client(intents=intents)
 
-server_name = 'Bot Lobby Test'
+server_name = 'Bot Lobby'
 games = ['Valorant', 'League']
 game_emojis = {}
 queue = {}
