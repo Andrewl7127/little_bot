@@ -20,7 +20,10 @@ Queues, #queue-notifications, and #bot-commands reset daily at 7 am pst'''
 
 async def help(message):
     await message.channel.send(f'{message.author.mention} ' + 'Sending help to your inbox!')
-    await message.author.send(msg)
+    try:
+        await message.author.send(msg)
+    except:
+        await message.channel.send(f'{message.author.mention} ' + 'Sorry, but I was unable to reach your inbox.')
 
 async def public_help(channel):
     pre = '=========================================================\n'
