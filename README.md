@@ -18,7 +18,19 @@
 * `!gun` to randomly generate a gun choice from all the gun options. 
 * `!pistol` to randomly generate a gun choice from only the pistol options.
 * `!strat` to randomly generate a strat/play style. 
+<br>
 
-## Set up
+## Set up for Discord
+* Create a text channel named `#queues`
+* Create a text channel named `#bot-commands`
+* Make sure you have a text channel named `#general`
+* Create roles with format "`LFG-game.title()`" for each game.
+* Name emojis with the same name as the game it corresponds to.
+<br>
+
+## Set up for Developers
 * Install `discord.py` library: <b>`pip install -U discord.py`</b>
 * Install `dotenv` library: <b>`pip install -U python-dotenv`</b>
+* Modify _server name_ on line 20 in `main.py`
+* Modify _game choices_ on line 21 in `main.py`
+* Modify _maps_ and _agents_ in `randomize.py`
