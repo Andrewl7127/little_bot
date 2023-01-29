@@ -17,17 +17,17 @@ TOKEN = os.getenv('DISCORD_TOKEN')
 
 client = discord.Client(intents=intents)
 
+server_name = 'Koffee'
+games = ['Valorant', 'League']
+game_emojis = {}
+queue = {}
+queue_text = 'Select the game you want to queue for: \n\n'
+
 queue_id = None
 queue_channel_id = None
 general_channel_id = None
 bot_channel_id = None
 guild = None
-server_name = 'Koffee'
-
-queue_text = 'Select the game you want to queue for: \n\n'
-games = ['Valorant', 'League']
-game_emojis = {}
-queue = {}
 
 async def clear_queues(message):
     global queue
