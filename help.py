@@ -1,5 +1,4 @@
-msg = '''
-**__Commands__**
+msg = '''**__Commands__**
 
 !help - bot instructions
 
@@ -9,15 +8,15 @@ msg = '''
 !gun - random Valorant gun
 !pistol - random Valorant pistol
 !map - random Valorant map
-!agent {X} - {X} random Valorant agents, default is 1
+!agent {X} - {X} random Valorant agents, default to 1
 !strat - random Valorant strategy
 
 **__Reactions__**
 
 React with game icon to be added to game queue
 Unreact to be removed from game queue
-Queues reset daily at 7 am pst
 
+Queues and #bot-commands reset daily at 7 am pst
 *Developed by Anju and Flurry*\n'''
 
 async def help(message):
