@@ -20,6 +20,7 @@ client = discord.Client(intents=intents)
 queue_id = None
 queue_channel_id = None
 general_channel_id = None
+bot_channel_id = None
 guild = None
 server_name = 'Koffee'
 
@@ -38,6 +39,10 @@ async def clear_queues(message):
     for game, emoji in game_emojis.items():
         await message.add_reaction(emoji)
 
+async def clear_bot_commands():
+    channel = client.get_channel(bot_channel_id)
+    await channel.purge(limit=None, bulk=True)
+
 @client.event
 async def on_ready():
     print(f'We have logged in as {client.user}')
@@ -48,6 +53,9 @@ async def on_ready():
     channel = get(client.get_all_channels(), guild__name=server_name, name='general')
     global general_channel_id
     general_channel_id = channel.id
+    channel = get(client.get_all_channels(), guild__name=server_name, name='bot-commands')
+    global bot_channel_id
+    bot_channel_id = channel.id
     channel = get(client.get_all_channels(), guild__name=server_name, name='queues')
     global queue_channel_id
     queue_channel_id = channel.id
@@ -81,6 +89,7 @@ async def on_ready():
     pacific = pytz.timezone("US/Pacific")
     scheduler = AsyncIOScheduler()
     scheduler.add_job(clear_queues, 'interval', args = [msg], days=1, start_date='2022-01-01 7:00:00', timezone=pacific)
+    scheduler.add_job(clear_bot_commands, 'interval', days=1, start_date='2022-01-01 7:00:00', timezone=pacific)
     scheduler.start()
 
 @client.event
