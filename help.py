@@ -2,21 +2,21 @@ msg = '''**__Commands__**
 
 !help - bot instructions
 
-!adopt - become Anju son
-!fan - become Anju fanboy
-
 !gun - random Valorant gun
 !pistol - random Valorant pistol
 !map - random Valorant map
 !agent {X} - {X} random Valorant agents, default to 1
 !strat - random Valorant strategy
 
+!adopt - become Anju son
+!fan - become Anju fanboy
+
 **__Reactions__**
 
-React with game icon to be added to game queue
-Unreact to be removed from game queue
+React with game icon to be added to the game queue
+Unreact to be removed from the game queue
 
-Queues and #bot-commands reset daily at 7 am pst'''
+Queues, #queue-notifications, and #bot-commands reset daily at 7 am pst'''
 
 async def help(message):
     await message.channel.send(f'{message.author.mention} ' + 'Sending help to your inbox!')
