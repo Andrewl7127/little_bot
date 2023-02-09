@@ -12,7 +12,12 @@ async def adopt(message):
     if len(sons) > 0:
         sons = [int(''.join([j for j in i if j.isnumeric()])) for i in sons]
         sons = [i for i in sons if type(i) == int]
-        msg = 'Congratulations, you have been assigned as #' + str(max(sons) + 1) + ' Son!'
+        new = max(sons) + 1
+        for i in range(max(sons)):
+            if i + 1 not in sons:
+                new = i + 1
+                break
+        msg = 'Congratulations, you have been assigned as #' + str(new) + ' Son!'
         await message.channel.send(f'{message.author.mention} ' + msg)
         next = "Anju's #" + str(max(sons) + 1) + ' Son'
         await message.author.edit(nick=next)
@@ -36,7 +41,12 @@ async def fan(message):
     if len(fanboys) > 0:
         fanboys = [int(''.join([j for j in i if j.isnumeric()])) for i in fanboys]
         fanboys = [i for i in fanboys if type(i) == int]
-        msg = ' Congratulations, you have been assigned as #' + str(max(fanboys) + 1) + ' Fanboy!'
+        new = max(fanboys) + 1
+        for i in range(max(fanboys)):
+            if i + 1 not in fanboys:
+                new = i + 1
+                break
+        msg = ' Congratulations, you have been assigned as #' + str(new) + ' Fanboy!'
         await message.channel.send(f'{message.author.mention} ' + msg)
         next = "Anju's #" + str(max(fanboys) + 1) + ' Fanboy'
         await message.author.edit(nick=next)
