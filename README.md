@@ -5,7 +5,8 @@
 ## Features 
 #### <i>Queue</i>
 * Bot displays a message with specified react icons.
-* Upon reaction to the bot message, player gets added to the corresponding queue. 
+* Upon reaction to the bot message, player gets added to the corresponding queue.
+# Once queue is full, players are asked to react within 10 minutes to stay in the queue.
 * Bot notifies existing players in the queue of any addition or removal in real time in `#queue-notifications` which resets daily at 7 am pst.
 * Queues automatically reset daily at 7 am pst.
 #### <i>Fanboy/Son adoption</i>
