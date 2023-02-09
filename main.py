@@ -7,6 +7,7 @@ import pytz
 from anju import *
 from help import *
 from randomize import *
+from datetime import datetime, timedelta
 
 intents = discord.Intents.default()
 intents.message_content = True
@@ -29,6 +30,8 @@ queue_notifications_channel_id = None
 bot_channel_id = None
 guild = None
 
+scheduler = AsyncIOScheduler()
+
 async def clear_queues(message):
     global queue
     queue = {}
@@ -45,31 +48,32 @@ async def clear_channels():
     channel = client.get_channel(queue_notifications_channel_id)
     await channel.purge(limit=None, bulk=True)
 
-async def join_queue(user, game):
+async def remove_queue(user, game, type):
     global queue
-    if len(queue[game]) == 0 or sum([1 if len(i) == 5 else 0 for i in queue[game]]) == len(queue[game]):
-        queue[game].append([])
-        queue[game][-1].append(user)
-        msg = str(user) + f' has started {game} queue (' + str(len(queue[game])) + ')!'
-        channel = client.get_channel(queue_notifications_channel_id)
-        role_name = game.title()
-        role = get(guild.roles, name=role_name)
-        await channel.send(f'{role.mention} ' + msg)
-
-    else:
+    for i in range(len(queue[game])):
+        if user in queue[game][i]:
+            queue[game][i].remove(user)
+            channel = client.get_channel(queue_notifications_channel_id)
+            if type == 'inactive':
+                msg = str(user) + f' has been removed from {game} (' + str(i + 1) + ') due to inactivity.'
+            else:
+                msg = str(user) + f' has left {game} (' + str(i + 1) + ').'
+            await channel.send(msg)
+    
+    channel = client.get_channel(queue_channel_id)
+    message = await channel.fetch_message(queue_id)
+    content = queue_text
+    for game in games:
         for i in range(len(queue[game])):
-            if len(queue[game][i]) < 5:
-                queue[game][i].append(user)
-                channel = client.get_channel(queue_notifications_channel_id)
-                msg = str(user) + f' has joined {game} queue (' + str(i + 1) + ').'
-                await channel.send(msg)
-                if len(queue[game][i]) == 4:
-                    msg = f'{game} (' + str(i + 1) + ') needs one more player!'
-                    await channel.send(msg)
-                if len(queue[game][i]) == 5:
-                    msg = " ".join([f"<@{user.id}>" for user in queue[game][i]]) + ' Your queue is ready!'
-                    await channel.send(msg)
-                break
+            content += '\n' + game + ' (' + str(i + 1) + '): ' + ', '.join([str(j) for j in queue[game][i]])
+        content += '\n'
+    await message.edit(content=content)
+
+async def delete_queue(users, game):
+    global queue
+    for i in queue[game]:
+        if i == users:
+            queue[game].remove(i)
 
     channel = client.get_channel(queue_channel_id)
     message = await channel.fetch_message(queue_id)
@@ -80,16 +84,57 @@ async def join_queue(user, game):
         content += '\n'
     await message.edit(content=content)
 
-async def remove_queue(payload, game):
-    user = await client.fetch_user(payload.user_id)
+async def check_queue(message, users, game):
+    channel = client.get_channel(queue_notifications_channel_id)
+    message = await message.channel.fetch_message(message.id)
+    reacted = []
+    async for i in message.reactions[0].users():
+        reacted.append(i)
+    if len(list(set(users).difference(set(reacted)))) == 0:
+        run_at = datetime.now() + timedelta(minutes = 1)
+        global scheduler
+        scheduler.add_job(delete_queue, 'date', run_date = run_at, args = [users, game])
+    else:
+        channel = client.get_channel(queue_channel_id)
+        message = await channel.fetch_message(queue_id)
+        for reaction in message.reactions:
+            if str(reaction.emoji) == game_emojis[game]:
+                break
+        for i in list(set(users).difference(set(reacted))):
+            await remove_queue(i, game, 'inactive')
+            await reaction.remove(i)
+
+
+async def join_queue(user, game):
     global queue
-    for i in range(len(queue[game])):
-        if user in queue[game][i]:
-            queue[game][i].remove(user)
-            channel = client.get_channel(queue_notifications_channel_id)
-            msg = str(user) + f' has left {game} queue (' + str(i + 1) + ').'
-            await channel.send(msg)
-    
+    if len(queue[game]) == 0 or sum([1 if len(i) == 5 else 0 for i in queue[game]]) == len(queue[game]):
+        queue[game].append([])
+        queue[game][-1].append(user)
+        msg = str(user) + f' has started {game} (' + str(len(queue[game])) + ')!'
+        channel = client.get_channel(queue_notifications_channel_id)
+        role_name = game.title()
+        role = get(guild.roles, name=role_name)
+        await channel.send(f'{role.mention} ' + msg)
+
+    else:
+        for i in range(len(queue[game])):
+            if len(queue[game][i]) < 5:
+                queue[game][i].append(user)
+                channel = client.get_channel(queue_notifications_channel_id)
+                msg = str(user) + f' has joined {game} (' + str(i + 1) + ').'
+                await channel.send(msg)
+                if len(queue[game][i]) == 4:
+                    msg = f'{game} (' + str(i + 1) + ') needs one more player!'
+                    await channel.send(msg)
+                if len(queue[game][i]) == 5:
+                    msg = " ".join([f"<@{user.id}>" for user in queue[game][i]]) + ' Your queue is ready! React within 10 minutes to stay in the queue.'
+                    msg = await channel.send(msg)
+                    await msg.add_reaction('\N{WHITE HEAVY CHECK MARK}')
+                    run_at = datetime.now() + timedelta(minutes = 1)
+                    global scheduler
+                    scheduler.add_job(check_queue, 'date', run_date = run_at, args = [msg, queue[game][i], game])
+                break
+
     channel = client.get_channel(queue_channel_id)
     message = await channel.fetch_message(queue_id)
     content = queue_text
@@ -109,13 +154,14 @@ async def on_ready():
     channel = get(client.get_all_channels(), guild__name=server_name, name='queue-notifications')
     global queue_notifications_channel_id
     queue_notifications_channel_id = channel.id
+    await channel.purge(limit=None, bulk=True)
     channel = get(client.get_all_channels(), guild__name=server_name, name='bot-commands')
     global bot_channel_id
     bot_channel_id = channel.id
+    await channel.purge(limit=None, bulk=True)
     channel = get(client.get_all_channels(), guild__name=server_name, name='queues')
     global queue_channel_id
     queue_channel_id = channel.id
-
     await channel.purge(limit=None, bulk=True)
     await public_help(channel)
 
@@ -143,7 +189,7 @@ async def on_ready():
 
     #queue clear schedule
     pacific = pytz.timezone("US/Pacific")
-    scheduler = AsyncIOScheduler()
+    global scheduler
     scheduler.add_job(clear_queues, 'interval', args = [msg], days=1, start_date='2022-01-01 7:00:00', timezone=pacific)
     scheduler.add_job(clear_channels, 'interval', days=1, start_date='2022-01-01 7:00:00', timezone=pacific)
     scheduler.start()
@@ -211,7 +257,8 @@ async def on_raw_reaction_remove(payload):
     if payload.message_id == queue_id:
         for game, emoji in game_emojis.items():
             if str(payload.emoji) == emoji:
-                await remove_queue(payload, game)
+                user = await client.fetch_user(payload.user_id)
+                await remove_queue(user, game, 'left')
                 break
         return
 
