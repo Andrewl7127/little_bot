@@ -182,7 +182,7 @@ async def on_message(message):
     if message.content == '!test':
         tag = "Anju#8036"
         user = get(client.users, name=tag.split("#")[1], discriminator=tag.split("#")[0])
-        await join_queue(user)
+        await join_queue(user, 'Valorant')
         return
 
 @client.event
