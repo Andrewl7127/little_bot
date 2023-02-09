@@ -5,7 +5,7 @@ msg = '''**__Commands__**
 !gun - random Valorant gun
 !pistol - random Valorant pistol
 !map - random Valorant map
-!agent {X} - {X} random Valorant agents, default to 1
+!agent {x} - {x} # of random Valorant agents, defaults to 1
 !strat - random Valorant strategy
 
 !adopt - become Anju son
