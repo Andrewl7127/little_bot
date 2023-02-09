@@ -15,6 +15,7 @@ msg = '''**__Commands__**
 
 React with game icon to be added to the game queue
 Unreact to be removed from the game queue
+Once queue is ready, react within 10 minutes to stay in the queue
 
 Queues, #queue-notifications, and #bot-commands reset daily at 7 am pst'''
 
