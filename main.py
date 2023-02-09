@@ -45,7 +45,7 @@ async def clear_channels():
     channel = client.get_channel(queue_notifications_channel_id)
     await channel.purge(limit=None, bulk=True)
 
-async def join_queue(user):
+async def join_queue(user, game):
     global queue
     if len(queue[game]) == 0 or sum([len(i) for i in queue[game]]) % 5 == 0:
         queue[game].append([])
@@ -74,7 +74,7 @@ async def join_queue(user):
         content += '\n'
     await message.edit(content=content)
 
-async def remove_queue(payload):
+async def remove_queue(payload, game):
     user = await client.fetch_user(payload.user_id)
     global queue
     for i in range(len(queue[game])):
@@ -193,7 +193,7 @@ async def on_reaction_add(reaction, user):
     if reaction.message.id == queue_id:
         for game, emoji in game_emojis.items():
             if str(reaction.emoji) == emoji:
-                join_queue(user)
+                join_queue(user, game)
                 break
         return
             
@@ -206,7 +206,7 @@ async def on_raw_reaction_remove(payload):
     if payload.message_id == queue_id:
         for game, emoji in game_emojis.items():
             if str(payload.emoji) == emoji:
-                remove_queue(payload)
+                remove_queue(payload, game)
                 break
         return
 
