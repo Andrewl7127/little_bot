@@ -29,5 +29,5 @@ async def help(message):
 
 async def public_help(channel):
     pre = '=========================================================\n'
-    post = '\n*Developed by Anju and Flurry*\n=========================================================\n\n\n.'
+    post = '\n\n*Developed by Anju and Flurry*\n=========================================================\n\n\n.'
     await channel.send(pre + msg + post)
