@@ -25,7 +25,7 @@
 * Create a text channel for queue notifications named `#queue-notifications`
 * Create a text channel named `#bot-commands`
 * Make sure you have a text channel named `#general`
-* Create roles with format "`LFG-game`" for each game.
+* Create roles with format "`game`" for each game.
 * Name emojis with the same name as the game it corresponds to.
 <br>
 
