@@ -45,6 +45,54 @@ async def clear_channels():
     channel = client.get_channel(queue_notifications_channel_id)
     await channel.purge(limit=None, bulk=True)
 
+async def join_queue(user):
+    global queue
+    if len(queue[game]) == 0 or sum([len(i) for i in queue[game]]) % 5 == 0:
+        queue[game].append([])
+        queue[game][-1].append(user)
+        msg = str(user) + f' has started {game} queue (' + str(len(queue[game])) + ')!'
+        channel = client.get_channel(queue_notifications_channel_id)
+        role_name = 'LFG-' + game.title()
+        role = get(guild.roles, name=role_name)
+        await channel.send(f'{role.mention} ' + msg)
+
+    else:
+        for i in range(len(queue[game])):
+            if len(queue[game][i]) < 5:
+                queue[game][i].append(user)
+                break
+        channel = client.get_channel(queue_notifications_channel_id)
+        msg = str(user) + f' has joined {game} queue (' + str(i + 1) + ')!'
+        await channel.send(msg)
+
+    channel = client.get_channel(queue_channel_id)
+    message = await channel.fetch_message(queue_id)
+    content = queue_text
+    for game in games:
+        for i in range(len(game)):
+            content += '\n' + game + ' (' + str(i + 1) + '): ' + ', '.join([str(j) for j in queue[game][i]])
+        content += '\n'
+    await message.edit(content=content)
+
+async def remove_queue(payload):
+    user = await client.fetch_user(payload.user_id)
+    global queue
+    for i in range(len(queue[game])):
+        if user in i:
+            i.remove(user)
+            channel = client.get_channel(queue_notifications_channel_id)
+            msg = str(user) + f' has left {game} queue (' + str(i + 1) + ').'
+            await channel.send(msg)
+    
+    channel = client.get_channel(queue_channel_id)
+    message = await channel.fetch_message(queue_id)
+    content = queue_text
+    for game in games:
+        for i in range(len(game)):
+            content += '\n' + game + ' (' + str(i + 1) + '): ' + ', '.join([str(j) for j in queue[game][i]])
+        content += '\n'
+    await message.edit(content=content)
+
 @client.event
 async def on_ready():
     print(f'We have logged in as {client.user}')
@@ -131,6 +179,12 @@ async def on_message(message):
         await randomStrat(message)
         return
 
+    if message.content == '!test':
+        tag = "Anju#8036"
+        user = get(client.users, name=tag.split("#")[1], discriminator=tag.split("#")[0])
+        await join_queue(user)
+        return
+
 @client.event
 async def on_reaction_add(reaction, user):
     if user == client.user:
@@ -139,34 +193,7 @@ async def on_reaction_add(reaction, user):
     if reaction.message.id == queue_id:
         for game, emoji in game_emojis.items():
             if str(reaction.emoji) == emoji:
-                global queue
-
-                if len(queue[game]) == 0 or sum([len(i) for i in queue[game]]) % 5 == 0:
-                    queue[game].append([])
-                    queue[game][-1].append(user)
-                    msg = str(user) + f' has started {game} queue (' + str(len(queue[game])) + ')!'
-                    channel = client.get_channel(queue_notifications_channel_id)
-                    role_name = 'LFG-' + game.title()
-                    role = get(guild.roles, name=role_name)
-                    await channel.send(f'{role.mention} ' + msg)
-
-                else:
-                    for i in range(len(queue[game])):
-                        if len(queue[game][i]) < 5:
-                            queue[game][i].append(user)
-                            break
-                    channel = client.get_channel(queue_notifications_channel_id)
-                    msg = str(user) + f' has joined {game} queue (' + str(i + 1) + ')!'
-                    await channel.send(msg)
-
-                channel = client.get_channel(queue_channel_id)
-                message = await channel.fetch_message(queue_id)
-                content = queue_text
-                for game in games:
-                    for i in range(len(game)):
-                        content += '\n' + game + ' (' + str(i + 1) + '): ' + ', '.join([str(j) for j in queue[game][i]])
-                    content += '\n'
-                await message.edit(content=content)
+                join_queue(user)
                 break
         return
             
@@ -179,23 +206,7 @@ async def on_raw_reaction_remove(payload):
     if payload.message_id == queue_id:
         for game, emoji in game_emojis.items():
             if str(payload.emoji) == emoji:
-                user = await client.fetch_user(payload.user_id)
-                global queue
-                for i in range(len(queue[game])):
-                    if user in i:
-                        i.remove(user)
-                        channel = client.get_channel(queue_notifications_channel_id)
-                        msg = str(user) + f' has left {game} queue (' + str(i + 1) + ').'
-                        await channel.send(msg)
-                
-                channel = client.get_channel(queue_channel_id)
-                message = await channel.fetch_message(queue_id)
-                content = queue_text
-                for game in games:
-                    for i in range(len(game)):
-                        content += '\n' + game + ' (' + str(i + 1) + '): ' + ', '.join([str(j) for j in queue[game][i]])
-                    content += '\n'
-                await message.edit(content=content)
+                remove_queue(payload)
                 break
         return
 
