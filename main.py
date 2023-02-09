@@ -18,7 +18,7 @@ TOKEN = os.getenv('DISCORD_TOKEN')
 
 client = discord.Client(intents=intents)
 
-server_name = 'CocoLand Test'
+server_name = 'CocoLand'
 games = ['Valorant', 'League']
 game_emojis = {}
 queue = {}
@@ -232,9 +232,9 @@ async def on_message(message):
         return
 
     #testing purposes
-    if message.content == '!join':
-        await join_queue(client.user, 'Valorant')
-        return
+#     if message.content == '!join':
+#         await join_queue(client.user, 'Valorant')
+#         return
 
 @client.event
 async def on_reaction_add(reaction, user):
