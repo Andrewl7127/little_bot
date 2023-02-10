@@ -14,11 +14,11 @@
 * `!son` to become Anju Son
 #### <i>Maps, Agents, Guns, and Strat Random Generation</i>
 * Allow players to type bot commands in the `#bot-commands` channel, which automatically resets daily at 7 am pst.
-* `!map` to randomly generate a map choice.
-* `!agent [number]` to generate the specified number of agent choices.
-* `!gun` to randomly generate a gun choice from all the gun options. 
-* `!pistol` to randomly generate a gun choice from only the pistol options.
-* `!strat` to randomly generate a strat/play style. 
+* `!map` to randomly generate a Valorant map choice.
+* `!agent [number]` to generate the specified number of Valorant agent choices.
+* `!gun` to randomly generate a gun choice from all the Valorant gun options. 
+* `!pistol` to randomly generate a gun choice from only the Valorant pistol options.
+* `!strat` to randomly generate a Valorant strat/play style. 
 <br>
 
 ## Set up for Discord
