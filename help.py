@@ -17,8 +17,8 @@ React with game icon to be added to the game queue
 Unreact to be removed from the game queue
 Once queue is ready, react within 10 minutes to stay in the queue
 
-Queues, #queue-notifications, and #bot-commands reset daily at 7 am pst
-Recommended to turn notification settings for #queues, #queue-notifications, and #bot-commands to only @mentions'''
+#queues, #queue-notifications, and #bot-commands reset daily at 7 am pst
+Recommended to turn notification settings to only @mentions'''
 
 async def help(message):
     try:
