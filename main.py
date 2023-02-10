@@ -91,7 +91,7 @@ async def check_queue(message, users, game):
     async for i in message.reactions[0].users():
         reacted.append(i)
     if len(list(set(users).difference(set(reacted)))) == 0:
-        run_at = datetime.now() + timedelta(minutes = 1)
+        run_at = datetime.now() + timedelta(minutes = 10)
         global scheduler
         scheduler.add_job(delete_queue, 'date', run_date = run_at, args = [users, game])
     else:
@@ -130,7 +130,7 @@ async def join_queue(user, game):
                     msg = " ".join([f"<@{user.id}>" for user in queue[game][i]]) + ' Your queue is ready! React within 10 minutes to stay in the queue.'
                     msg = await channel.send(msg)
                     await msg.add_reaction('\N{WHITE HEAVY CHECK MARK}')
-                    run_at = datetime.now() + timedelta(minutes = 1)
+                    run_at = datetime.now() + timedelta(minutes = 10)
                     global scheduler
                     scheduler.add_job(check_queue, 'date', run_date = run_at, args = [msg, queue[game][i], game])
                 break
