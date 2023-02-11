@@ -55,10 +55,20 @@ async def remove_queue(user, game, type):
             queue[game][i].remove(user)
             channel = client.get_channel(queue_notifications_channel_id)
             if type == 'inactive':
-                msg = str(user) + f' has been removed from {game} (' + str(i + 1) + ') due to inactivity.'
+                msg = f'<@{user.id}>' + f' you have been removed from {game} (' + str(i + 1) + ') due to inactivity.'
             else:
                 msg = str(user) + f' has left {game} (' + str(i + 1) + ').'
             await channel.send(msg)
+            break
+    
+    if sum([len(i) for i in queue[game]]) >= 5:
+        for i in range(len(queue[game])):
+            if i > 0:
+                while len(queue[game][i]) >= 1 and len(queue[game][i-1]) < 5:
+                    temp = queue[game][i].pop(0)
+                    queue[game][i-1].append(temp)
+        if len(queue[game][-1]) == 0:
+            queue[game].pop(-1)
     
     channel = client.get_channel(queue_channel_id)
     message = await channel.fetch_message(queue_id)
@@ -127,7 +137,7 @@ async def join_queue(user, game):
                     msg = f'{game} (' + str(i + 1) + ') needs one more player!'
                     await channel.send(msg)
                 if len(queue[game][i]) == 5:
-                    msg = " ".join([f"<@{user.id}>" for user in queue[game][i]]) + ' Your queue is ready! React within 10 minutes to stay in the queue.'
+                    msg = " ".join([f'<@{user.id}>' for user in queue[game][i]]) + ' Your queue is ready! React within 10 minutes to stay in the queue.'
                     msg = await channel.send(msg)
                     await msg.add_reaction('\N{WHITE HEAVY CHECK MARK}')
                     run_at = datetime.now() + timedelta(minutes = 10)
@@ -232,9 +242,9 @@ async def on_message(message):
         return
 
     #testing purposes
-#     if message.content == '!join':
-#         await join_queue(client.user, 'Valorant')
-#         return
+    if message.content == '!join':
+        await join_queue(client.user, 'Valorant')
+        return
 
 @client.event
 async def on_reaction_add(reaction, user):
