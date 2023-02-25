@@ -36,3 +36,6 @@
 * Modify _server name_ on line 20 in `main.py`
 * Modify _game choices_ on line 21 in `main.py`
 * Modify _maps_ and _agents_ in `randomize.py`
+
+
+Invite link: https://discord.com/oauth2/authorize?client_id=1068445743028903957&permissions=8&scope=bot
