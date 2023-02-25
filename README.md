@@ -9,7 +9,7 @@
 # Once queue is full, players are asked to react within 10 minutes to stay in the queue.
 * Bot notifies existing players in the queue of any addition or removal in real time in `#queue-notifications` which resets daily at 7 am pst.
 * Queues automatically reset daily at 7 am pst.
-#### <i>Fanboy/Son adoption</i>
+#### <i>Misc</i>
 * `!fan` to become Anju Fanboy
 * `!son` to become Anju Son
 #### <i>Maps, Agents, Guns, and Strat Random Generation</i>
