@@ -20,14 +20,12 @@
 * `!pistol` to randomly generate a gun choice from only the Valorant pistol options.
 * `!strat` to randomly generate a Valorant strat/play style.
 #### <i>Events</i>
-* `!schedule [game] [time] [notify]` to schedule a game event at a certain time
+* Event notifications are housed in the `#events` channel, which automatically resets daily at 7 am pst.
+* `!schedule [game] [time] [notify]` to schedule a game event at a certain time.
 <br>
 
 ## Set up for Discord
-* Create a text channel named `#queues`
-* Create a text channel for queue notifications named `#queue-notifications`
-* Create a text channel named `#bot-commands`
-* Make sure you have a text channel named `#general`
+* Create the following text channels: `#general`, `#queues`, `#queue-notifications`, `#bot-commands`, `#events`
 * Create roles with format "`game`" for each game.
 * Name emojis with the same name as the game it corresponds to.
 <br>
