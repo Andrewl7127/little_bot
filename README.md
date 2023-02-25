@@ -18,7 +18,9 @@
 * `!agent [number]` to generate the specified number of Valorant agent choices.
 * `!gun` to randomly generate a gun choice from all the Valorant gun options. 
 * `!pistol` to randomly generate a gun choice from only the Valorant pistol options.
-* `!strat` to randomly generate a Valorant strat/play style. 
+* `!strat` to randomly generate a Valorant strat/play style.
+#### <i>Events</i>
+* `!schedule [game] [time] [notify]` to schedule a game event at a certain time
 <br>
 
 ## Set up for Discord
@@ -38,4 +40,4 @@
 * Modify _maps_ and _agents_ in `randomize.py`
 
 
-Invite link: https://discord.com/oauth2/authorize?client_id=1068445743028903957&permissions=8&scope=bot
+#### Invite link: https://discord.com/oauth2/authorize?client_id=1068445743028903957&permissions=8&scope=bot
