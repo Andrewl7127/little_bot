@@ -19,7 +19,7 @@ async def adopt(message):
                 break
         msg = 'Congratulations, you have been assigned as #' + str(new) + ' Son!'
         await message.channel.send(f'{message.author.mention} ' + msg)
-        next = "Anju's #" + str(max(sons) + 1) + ' Son'
+        next = "Anju's #" + str(new) + ' Son'
         await message.author.edit(nick=next)
     else:
         msg = 'Congratulations, you have been assigned as #1 Son!'
@@ -48,7 +48,7 @@ async def fan(message):
                 break
         msg = ' Congratulations, you have been assigned as #' + str(new) + ' Fanboy!'
         await message.channel.send(f'{message.author.mention} ' + msg)
-        next = "Anju's #" + str(max(fanboys) + 1) + ' Fanboy'
+        next = "Anju's #" + str(new) + ' Fanboy'
         await message.author.edit(nick=next)
     else:
         msg = ' Congratulations, you have been assigned as #1 Fanboy!'
