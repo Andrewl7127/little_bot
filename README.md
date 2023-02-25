@@ -9,9 +9,6 @@
 # Once queue is full, players are asked to react within 10 minutes to stay in the queue.
 * Bot notifies existing players in the queue of any addition or removal in real time in `#queue-notifications` which resets daily at 7 am pst.
 * Queues automatically reset daily at 7 am pst.
-#### <i>Misc</i>
-* `!fan` to become Anju Fanboy
-* `!son` to become Anju Son
 #### <i>Maps, Agents, Guns, and Strat Random Generation</i>
 * Allow players to type bot commands in the `#bot-commands` channel, which automatically resets daily at 7 am pst.
 * `!map` to randomly generate a Valorant map choice.
@@ -22,6 +19,9 @@
 #### <i>Events</i>
 * Event notifications are housed in the `#events` channel, which automatically resets daily at 7 am pst.
 * `!schedule [game] [time] [notify]` to schedule a game event at a certain time.
+#### <i>Misc</i>
+* `!fan` to become Anju Fanboy
+* `!son` to become Anju Son
 <br>
 
 ## Set up for Discord
