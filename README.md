@@ -18,7 +18,7 @@
 * `!strat` to randomly generate a Valorant strat/play style.
 #### <i>Events</i>
 * Event notifications are housed in the `#events` channel, which automatically resets daily at 7 am pst.
-* `!schedule [game] [time] [notify]` to schedule a game event at a certain time.
+* `!schedule [game] [time] [notify] [desc]` to schedule a game event at a certain time.
 #### <i>Misc</i>
 * `!fan` to become Anju Fanboy
 * `!son` to become Anju Son
