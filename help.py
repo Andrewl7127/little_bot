@@ -2,11 +2,12 @@ msg = '''**__Commands__**
 
 !help - bot instructions
 
+!schedule {game} {time} {notify} - schedule game event at certain time
+
 !gun - random Valorant gun
 !pistol - random Valorant pistol
 !map - random Valorant map
-!agent {x} - {x} # of random Valorant agents, defaults to 1
-!strat - random Valorant strategy
+!agent {n} - random Valorant agents, defaults to 1
 
 !adopt - become Anju son
 !fan - become Anju fanboy
@@ -17,7 +18,7 @@ React with game icon to be added to the game queue
 Unreact to be removed from the game queue
 Once queue is ready, react within 10 minutes to stay in the queue
 
-#queues, #queue-notifications, and #bot-commands reset daily at 7 am pst
+#queues, #queue-notifications, #events, and #bot-commands reset daily at 7 am pst
 Recommended to turn notification settings to only @mentions'''
 
 async def help(message):
