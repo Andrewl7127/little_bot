@@ -25,7 +25,8 @@
 <br>
 
 ## Set up for Discord
-* Create the following text channels: `#general`, `#queues`, `#queue-notifications`, `#bot-commands`, `#events`
+* Create the following text channels: `#general`, `#help`, `#queues`, `#queue-notifications`, `#bot-commands`, `#events`
+* Make sure permissions are set correctly for channels so that users can't add type or add reactions/other media to `#help`, `#queues`, `#queue-notifications`,  `#events`
 * Create roles with format "`game`" for each game.
 * Name emojis with the same name as the game it corresponds to.
 <br>
