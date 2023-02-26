@@ -187,7 +187,7 @@ async def create_event(message):
         notify = content[3].lower()
         channel = client.get_channel(server_variables[guild_id]['event_channel_id'])
         if notify == 'y':
-            msg = str(user) + ' will be playing ' + f'{game}' + ' at ' + str(run_at)[:-3] + '. React to join!'
+            msg = str(user) + ' will be playing ' + f'{game.lower().title()}' + ' at ' + str(run_at)[:-3] + '. React to join!'
             role_name = game.lower().title()
             guild = await client.fetch_guild(guild_id)
             role = get(guild.roles, name=role_name)
@@ -195,7 +195,7 @@ async def create_event(message):
                 msg += '\n\n Description: ' + desc
             msg = await channel.send(f'{role.mention} ' + msg)
         else:
-            msg = str(user) + ' will be playing ' + f'{game}' + ' at ' + str(run_at)[:-3] + '. React to join!'
+            msg = str(user) + ' will be playing ' + f'{game.lower().title()}' + ' at ' + str(run_at)[:-3] + '. React to join!'
             if desc is not None:
                 msg += '\n\n Description: ' + desc
             msg = await channel.send(msg)
