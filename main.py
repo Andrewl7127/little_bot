@@ -129,7 +129,7 @@ async def join_queue(user, game, guild_id):
                     msg = " ".join([f'<@{user.id}>' for user in queue[game][i]]) + ' Your queue is ready! React within 10 minutes to stay in the queue.'
                     msg = await channel.send(msg)
                     await msg.add_reaction('\N{WHITE HEAVY CHECK MARK}')
-                    run_at = datetime.datetime.now() + datetime.timedelta(minutes = 1)
+                    run_at = datetime.datetime.now() + datetime.timedelta(minutes = 10)
                     global scheduler
                     scheduler.add_job(check_queue, 'date', run_date = run_at, args = [msg, queue[game][i], game, guild_id], timezone=pacific)
                 found = True
@@ -323,10 +323,10 @@ async def on_message(message):
         await create_event(message)
         
     #TESTING ONLY
-    if message.content.startswith('!test'):
-        game = message.content.split(' ')[1].lower().title()
-        await join_queue(client.user, game, list(server_variables.keys())[0])
-        return
+#     if message.content.startswith('!test'):
+#         game = message.content.split(' ')[1].lower().title()
+#         await join_queue(client.user, game, list(server_variables.keys())[0])
+#         return
 
 @client.event
 async def on_reaction_add(reaction, user):
