@@ -10,7 +10,7 @@ Once queue is ready, react within 10 minutes to stay in the queue
 
 **__Events__**
 
-!schedule {game} {time} {notify} - schedule game event at certain time
+!schedule {game} {time} {notify} {desc} - schedule game event at certain time
 
 **__Randomize__**
 
@@ -36,5 +36,5 @@ async def help(message):
 
 async def public_help(channel):
     pre = '=========================================================\n'
-    post = '\n\n*Developed by Anju and Flurry*\n=========================================================\n\n\n.'
+    post = '\n\n*Developed by Anju and Flurry*\n========================================================='
     await channel.send(pre + msg + post)
