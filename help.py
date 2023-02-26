@@ -14,6 +14,7 @@ Once queue is ready, react within 10 minutes to stay in the queue
 
 **__Randomize__**
 
+!coin - flip a coin
 !gun - random Valorant gun
 !pistol - random Valorant pistol
 !map - random Valorant map
