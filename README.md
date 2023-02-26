@@ -9,8 +9,9 @@
 # Once queue is full, players are asked to react within 10 minutes to stay in the queue.
 * Bot notifies existing players in the queue of any addition or removal in real time in `#queue-notifications` which resets daily at 7 am pst.
 * Queues automatically reset daily at 7 am pst.
-#### <i>Maps, Agents, Guns, and Strat Random Generation</i>
+#### <i>Randomization</i>
 * Allow players to type bot commands in the `#bot-commands` channel, which automatically resets daily at 7 am pst.
+* `!coin` to flip a coin.
 * `!map` to randomly generate a Valorant map choice.
 * `!agent [number]` to generate the specified number of Valorant agent choices.
 * `!gun` to randomly generate a gun choice from all the Valorant gun options. 
