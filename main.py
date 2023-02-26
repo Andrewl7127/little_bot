@@ -18,8 +18,8 @@ TOKEN = os.getenv('DISCORD_TOKEN')
 
 client = discord.Client(intents=intents)
 
-games = ['Valorant', 'League', 'Minecraft']
-game_n = {'Valorant':5, 'League':5, 'Minecraft':9999}
+games = ['Valorant', 'League', 'Minecraft', 'Rocket', 'Csgo']
+game_n = {'Valorant':5, 'League':5, 'Minecraft':9999, 'Rocket':3, 'Csgo':5}
 
 server_variables = {}
 
@@ -57,15 +57,6 @@ async def remove_queue(user, game, type, guild_id):
             await channel.send(msg)
             break
     
-    if sum([len(i) for i in queue[game]]) >= n:
-        for i in range(len(queue[game])):
-            if i > 0:
-                while len(queue[game][i]) >= 1 and len(queue[game][i-1]) < n:
-                    temp = queue[game][i].pop(0)
-                    queue[game][i-1].append(temp)
-        if len(queue[game][-1]) == 0:
-            queue[game].pop(-1)
-    
     channel = client.get_channel(server_variables[guild_id]['queue_channel_id'])
     message = await channel.fetch_message(server_variables[guild_id]['queue_id'])
     content = server_variables[guild_id]['queue_text']
@@ -77,7 +68,7 @@ async def remove_queue(user, game, type, guild_id):
 
 async def delete_queue(users, game, guild_id):
     global server_variables
-    queue = server_variables[guild_id][queue]
+    queue = server_variables[guild_id]['queue']
     for i in queue[game]:
         if i == users:
             queue[game].remove(i)
@@ -98,9 +89,7 @@ async def check_queue(message, users, game, guild_id):
     async for i in message.reactions[0].users():
         reacted.append(i)
     if len(list(set(users).difference(set(reacted)))) == 0:
-        run_at = datetime.datetime.now() + datetime.timedelta(minutes = 1)
-        global scheduler
-        scheduler.add_job(delete_queue, 'date', run_date = run_at, args = [users, game, guild_id])
+        await delete_queue(users, game, guild_id)
     else:
         channel = client.get_channel(server_variables[guild_id]['queue_channel_id'])
         message = await channel.fetch_message(server_variables[guild_id]['queue_id'])
@@ -115,17 +104,18 @@ async def join_queue(user, game, guild_id):
     global server_variables
     n = game_n[game]
     queue = server_variables[guild_id]['queue']
-    if len(queue[game]) == 0 or sum([1 if len(i) == n else 0 for i in queue[game]]) == len(queue[game]):
+    if len(queue[game]) == 0:
         queue[game].append([])
         queue[game][-1].append(user)
         msg = str(user) + f' has started {game} (' + str(len(queue[game])) + ')!'
         channel = client.get_channel(server_variables[guild_id]['queue_notifications_channel_id'])
-        role_name = game.title()
+        role_name = game.lower().title()
         guild = await client.fetch_guild(guild_id)
         role = get(guild.roles, name=role_name)
         await channel.send(f'{role.mention} ' + msg)
 
     else:
+        found = False
         for i in range(len(queue[game])):
             if len(queue[game][i]) < n:
                 queue[game][i].append(user)
@@ -142,7 +132,17 @@ async def join_queue(user, game, guild_id):
                     run_at = datetime.datetime.now() + datetime.timedelta(minutes = 1)
                     global scheduler
                     scheduler.add_job(check_queue, 'date', run_date = run_at, args = [msg, queue[game][i], game, guild_id], timezone=pacific)
+                found = True
                 break
+        if not found:
+            queue[game].append([])
+            queue[game][-1].append(user)
+            msg = str(user) + f' has started {game} (' + str(len(queue[game])) + ')!'
+            channel = client.get_channel(server_variables[guild_id]['queue_notifications_channel_id'])
+            role_name = game.lower().title()
+            guild = await client.fetch_guild(guild_id)
+            role = get(guild.roles, name=role_name)
+            await channel.send(f'{role.mention} ' + msg)
 
     channel = client.get_channel(server_variables[guild_id]['queue_channel_id'])
     message = await channel.fetch_message(server_variables[guild_id]['queue_id'])
@@ -157,50 +157,61 @@ async def create_event(message):
     guild_id = message.guild.id
     user = message.author
     content = message.content.split(' ')
-    if len(content) < 4:
-        msg = 'Please make sure your command structure is correct: !schedule game time(hour[req]:minute[opt] PST) notify(Y/N).'
+    try:
+        if len(content) < 4:
+            msg = 'Please make sure your command structure is correct: !schedule game time(hour[req]:minute[opt][PST]) notify(Y/N) desc[opt]'
+            await message.channel.send(f'{message.author.mention} ' + msg)
+            return
+        if content[1].lower().title() not in games:
+            msg = 'Please double check the game spelling.'
+            await message.channel.send(f'{message.author.mention} ' + msg)
+            return
+        if not content[2].replace(':', '').isdigit() or int(content[2].replace(':', '')) > 2359:
+            msg = 'Please double check the time format: hour[req]:minute[opt][PST]'
+            await message.channel.send(f'{message.author.mention} ' + msg)
+            return
+        if content[3].lower() not in ('y', 'n'):
+            msg = 'Please choose either Y or N for the notify argument.'
+            await message.channel.send(f'{message.author.mention} ' + msg)
+            return
+        desc = None
+        if len(content) > 4:
+            desc = ' '.join(content[4:])
+        game = content[1]
+        hour = int(content[2].split(':')[0])
+        if len(content[2].split(':')) > 1:
+            minute = int(content[2].split(':')[1])
+        else:
+            minute = 0
+        run_at = datetime.time(hour=hour, minute=minute)
+        notify = content[3].lower()
+        channel = client.get_channel(server_variables[guild_id]['event_channel_id'])
+        if notify == 'y':
+            msg = str(user) + ' will be playing ' + f'{game}' + ' at ' + str(run_at)[:-3] + '. React to join!'
+            role_name = game.lower().title()
+            guild = await client.fetch_guild(guild_id)
+            role = get(guild.roles, name=role_name)
+            if desc is not None:
+                msg += '\n\n Description: ' + desc
+            msg = await channel.send(f'{role.mention} ' + msg)
+        else:
+            msg = str(user) + ' will be playing ' + f'{game}' + ' at ' + str(run_at)[:-3] + '. React to join!'
+            if desc is not None:
+                msg += '\n\n Description: ' + desc
+            msg = await channel.send(msg)
+        await msg.add_reaction('\N{WHITE HEAVY CHECK MARK}')
+        global scheduler
+        now = datetime.datetime.now(pacific)
+        run_at = datetime.datetime.combine(now.date(), run_at)
+        scheduled_datetime = datetime.datetime.combine(now.date(), now.time())
+        if scheduled_datetime >= run_at:
+            run_at += datetime.timedelta(days=1)
+        scheduler.add_job(remind_event, 'date', run_date = run_at, args = [msg, user, game, channel, desc], timezone=pacific)
+    except:
+        msg = 'Error scheduling your event. \n\nPlease make sure your command structure is correct: \n!schedule game time(hour[req]:minute[opt][PST]) notify(Y/N) desc[opt]'
         await message.channel.send(f'{message.author.mention} ' + msg)
-        return
-    if content[1].lower().title() not in games:
-        msg = 'Please double check the game spelling.'
-        await message.channel.send(f'{message.author.mention} ' + msg)
-        return
-    if not content[2].replace(':', '').isdigit():
-        msg = 'Please double check the time format: hour[req]:minute[opt] PST.'
-        await message.channel.send(f'{message.author.mention} ' + msg)
-        return
-    if content[3].lower() not in ('y', 'n'):
-        msg = 'Please choose either Y or N for the notify argument.'
-        await message.channel.send(f'{message.author.mention} ' + msg)
-        return
-    game = content[1]
-    hour = int(content[2].split(':')[0])
-    if len(content[2].split(':')) > 1:
-        minute = int(content[2].split(':')[1])
-    else:
-        minute = 0
-    run_at = datetime.time(hour=hour, minute=minute)
-    notify = content[3].lower()
-    channel = client.get_channel(server_variables[guild_id]['event_channel_id'])
-    if notify == 'y':
-        msg = str(user) + ' will be playing ' + f'{game}' + ' at ' + str(run_at)[:-3] + '. React to join!'
-        role_name = game.title()
-        guild = await client.fetch_guild(guild_id)
-        role = get(guild.roles, name=role_name)
-        msg = await channel.send(f'{role.mention} ' + msg)
-    else:
-        msg = str(user) + ' will be playing ' + f'{game}' + ' at ' + str(run_at)[:-3] + '. React to join!'
-        msg = await channel.send(msg)
-    await msg.add_reaction('\N{WHITE HEAVY CHECK MARK}')
-    global scheduler
-    now = datetime.datetime.now(pacific)
-    run_at = datetime.datetime.combine(now.date(), run_at)
-    scheduled_datetime = datetime.datetime.combine(now.date(), now.time())
-    if scheduled_datetime >= run_at:
-        run_at += datetime.timedelta(days=1)
-    scheduler.add_job(remind_event, 'date', run_date = run_at, args = [msg, user, game, channel], timezone=pacific)
 
-async def remind_event(message, user, game, channel):
+async def remind_event(message, user, game, channel, desc = None):
     reacted = []
     message = await message.channel.fetch_message(message.id)
     async for i in message.reactions[0].users():
@@ -208,7 +219,9 @@ async def remind_event(message, user, game, channel):
             reacted.append(i)
     if user not in reacted:
         reacted.append(user)
-    msg = " ".join([f'<@{user.id}>' for user in reacted]) + " It's time to play " + f'{game}!'
+    msg = " ".join([f'<@{user.id}>' for user in reacted]) + " It's time to play " + f'{game.lower().title()}!'
+    if desc is not None:
+        msg += '\n\n Description: ' + desc
     await channel.send(msg)
     
 @client.event
@@ -230,6 +243,8 @@ async def on_ready():
         channel = get(client.get_all_channels(), guild__name=guild.name, name='queues')
         server_variables[guild.id]['queue_channel_id'] = channel.id
         await channel.purge(limit=None, bulk=True)
+        channel = get(client.get_all_channels(), guild__name=guild.name, name='help')
+        await channel.purge(limit=None, bulk=True)
         await public_help(channel)
 
         # make individual queues and identify emojis for each game
@@ -246,6 +261,7 @@ async def on_ready():
                     break
 
         # display bot message with emojis
+        channel = get(client.get_all_channels(), guild__name=guild.name, name='queues')
         msg = await channel.send(server_variables[guild.id]['queue_text'])
         server_variables[guild.id]['queue_id'] = msg.id
 
@@ -303,8 +319,9 @@ async def on_message(message):
         await create_event(message)
         
     #TESTING ONLY
-    if message.content == '!join':
-        await join_queue(client.user, 'Valorant', list(server_variables.keys())[0])
+    if message.content.startswith('!test'):
+        game = message.content.split(' ')[1].lower().title()
+        await join_queue(client.user, game, list(server_variables.keys())[0])
         return
 
 @client.event
