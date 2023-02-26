@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 import os
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 import pytz
-from anju import *
+from misc import *
 from help import *
 from randomize import *
 import datetime
@@ -313,6 +313,10 @@ async def on_message(message):
 
     if message.content == '!pistol':
         await randomPistol(message)
+        return
+    
+    if message.content == '!coin':
+        await coinFlip(message)
         return
     
     if message.content.startswith('!schedule'):
