@@ -1,6 +1,10 @@
 import random
 import requests
 
+async def coinFlip(message):
+    flips = ['Heads', 'Tails']
+    await message.channel.send(f'{message.author.mention} ' + flips[random.randint(0, len(flips) - 1)])
+
 async def randomAgent(message):
     number = message.content.split(' ')
     if len(number) > 1: 
