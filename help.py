@@ -22,6 +22,7 @@ Once queue is ready, react within 10 minutes to stay in the queue
 
 ** __Misc__**
 
+!server {ip} - check status of Minecraft server, defaults to group server ip
 !adopt - become Anju son
 !fan - become Anju fanboy
 
