@@ -21,6 +21,7 @@
 * Event notifications are housed in the `#events` channel, which automatically resets daily at 7 am pst.
 * `!schedule [game] [time] [notify] [desc]` to schedule a game event at a certain time.
 #### <i>Misc</i>
+* `!server` to check status of Minecraft server, defaults to group server ip
 * `!fan` to become Anju Fanboy
 * `!son` to become Anju Son
 <br>
