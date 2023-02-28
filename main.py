@@ -321,6 +321,9 @@ async def on_message(message):
     
     if message.content.startswith('!schedule'):
         await create_event(message)
+
+    if message.content.startswith('!server'):
+        await server(message)
         
     #TESTING ONLY
 #     if message.content.startswith('!test'):
