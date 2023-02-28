@@ -65,7 +65,11 @@ async def server(message):
     try:
         server = JavaServer.lookup(ip)
         status = server.status()
-        msg = f'The server is online, and there are {status.players.online} players on!'
+        if 'this server is offline' not in status.description().lower() and 'this server is stopping' not in status.description().lower():
+            msg = f'The server is online, and there are {status.players.online} players on!'
+            msg += '\n\nPlayers on: ' + ', '.join([i.name for i in status.players.sample])
+        else:
+            msg = 'The server is offline.'
     except:
-        msg = f'The server is offline.'
+        msg = 'The server is offline.'
     await message.channel.send(f'{message.author.mention} ' + msg)
