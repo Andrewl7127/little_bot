@@ -1,3 +1,5 @@
+from mcstatus import JavaServer
+
 async def adopt(message):
     names = []
     async for member in message.guild.fetch_members():
@@ -46,12 +48,24 @@ async def fan(message):
             if i + 1 not in fanboys:
                 new = i + 1
                 break
-        msg = ' Congratulations, you have been assigned as #' + str(new) + ' Fanboy!'
+        msg = 'Congratulations, you have been assigned as #' + str(new) + ' Fanboy!'
         await message.channel.send(f'{message.author.mention} ' + msg)
         next = "Anju's #" + str(new) + ' Fanboy'
         await message.author.edit(nick=next)
     else:
-        msg = ' Congratulations, you have been assigned as #1 Fanboy!'
+        msg = 'Congratulations, you have been assigned as #1 Fanboy!'
         await message.channel.send(f'{message.author.mention} ' + msg)
         next = "Anju's #1 Fanboy"
         await message.author.edit(nick=next)
+
+async def server(message):
+    ip = 'riceuuu.aternos.me'
+    if message.split(' ') > 1:
+        ip = message.split(' ')[1]
+    try:
+        server = JavaServer.lookup(ip)
+        status = server.status()
+        msg = f'The server is online, and there are {status.players.online} players on!'
+    except:
+        msg = f'The server is offline.'
+    await message.channel.send(f'{message.author.mention} ' + msg)
