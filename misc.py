@@ -60,7 +60,7 @@ async def fan(message):
 
 async def server(message):
     ip = 'riceuuu.aternos.me'
-    if message.content.split(' ') > 1:
+    if len(message.content.split(' ')) > 1:
         ip = message.content.split(' ')[1]
     try:
         server = JavaServer.lookup(ip)
