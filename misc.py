@@ -59,7 +59,7 @@ async def fan(message):
         await message.author.edit(nick=next)
 
 async def server(message):
-    ip = '67.222.149.66:20175'
+    ip = 'mc.hypixel.net'
     if len(message.content.split(' ')) > 1:
         ip = message.content.split(' ')[1]
     try:
